@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "frontend/styles/main.css"
+        ],
+        "createdAt": "2026-11-09T03:11:59.196Z",
+        "reason": "name + section-heading gradient is the signature of the reference design the user asked to replicate exactly (hero name 'Kervin Sarmiento' gradient); stat numbers already made solid"
+      }
+    ]
+  }
+}
