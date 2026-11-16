@@ -40,9 +40,8 @@ Pages (follow `Simundo-Portfolio-Sitemap.pdf`):
 
 | URL                  | File                                | Contents                                                     |
 | -------------------- | ----------------------------------- | ------------------------------------------------------------ |
-| `/`                  | `index.html`                        | Home: hero, #about, #experience, #work, #credentials        |
+| `/`                  | `index.html`                        | Home: hero, #about, #experience, #work, #multimedia, #credentials        |
 | `/contact/`          | `contact/index.html`                | Email, GitHub, LinkedIn                                      |
-| `/work/mind-bridge/` | `work/mind-bridge/index.html`       | Mind Bridge case study                                       |
 
 - **Edit content:** `frontend/src/content.js` holds every word, link and project. Empty links are hidden.
 - **App:** `frontend/src/app.js` renders the pages and runs every animation (GSAP 3.15 via CDN).

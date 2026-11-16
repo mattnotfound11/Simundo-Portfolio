@@ -26,7 +26,7 @@ window.CONTENT = {
   /* ---------- 01 #about: bio and tech highlights ---------- */
   aboutCards: [
     { title: "Education", text: "BS Information Technology at the University of San Agustin (USA), from 1st to 3rd year." },
-    { title: "Building", text: "Mind Bridge, a student mental health monitoring system. Read the case study in Work." },
+    { title: "Building", text: "Mind Bridge, a student mental health check-in and counselor booking site. Open it in Work." },
     { title: "Leadership", text: "3-C Holotech Representative since 2023 and CAS Officer since 2024." },
   ],
   mindset: {
@@ -106,27 +106,16 @@ window.CONTENT = {
     {
       slug: "mind-bridge",
       n: "01",
-      category: "Case study",
+      category: "Web app",
       title: "Mind Bridge",
-      summary: "A student mental health monitoring system.",
-      tags: ["Case study", "Web app"],
-      href: "work/mind-bridge/",
-      tone: "linear-gradient(135deg,#0ea5e9,#0c4a6e)",
+      summary: "A private wellness check-in for University of San Agustin students: a short screening, crisis support and booking a campus guidance counselor.",
+      tags: ["Web app", "Student wellbeing"],
+      href: "https://mind-bridge-omega.vercel.app",
+      image: "assets/media/mind-bridge.jpg",
+      imageAlt: "Mind Bridge home page: Ask for help quietly, reach a counselor sooner, with the four steps from check-in to chat.",
+      tone: "linear-gradient(135deg,#7f1d1d,#450a0a)",
     },
   ],
-  // Case study pages. Replace the "To be added" text with the real write-up.
-  caseStudies: {
-    "mind-bridge": {
-      title: "Mind Bridge",
-      subtitle: "Student Mental Health Monitoring System",
-      overview: "To be added: the problem Mind Bridge solves for students, and a short overview of the system.",
-      role: "To be added",
-      timeline: "To be added",
-      tools: ["To be added"],
-      process: "To be added: how the project went from research to wireframes to code, with screenshots and visuals.",
-      results: "To be added: what was delivered and the results.",
-    },
-  },
 
   /* ---------- #multimedia: videos ----------
      "drive" is the Google Drive file ID (the part after /file/d/ in the share link).
@@ -178,7 +167,7 @@ window.CONTENT = {
 
   // The hero assistant answers from this list (first match wins).
   answers: [
-    [/build|make|project|work|see|mind ?bridge/, "My featured project is Mind Bridge, a student mental health monitoring system. Open the case study in the Work section."],
+    [/build|make|project|work|see|mind ?bridge/, "My featured project is Mind Bridge, a student wellness check-in site for USA. Open it from the Work section."],
     [/contact|email|reach|hire|talk|message/, "Email me at simundojanlouis@gmail.com, or use the Contact page."],
     [/skill|stack|know|tech|python|react|type|node|supabase|tailwind|language/, "I work with TypeScript, React and Next.js, Node.js, Supabase, Tailwind and Python."],
     [/video|multimedia|film|edit|sanag/, "Check the Multimedia section for my video work, like Sanag, filmed on campus at USA."],

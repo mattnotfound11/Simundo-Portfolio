@@ -425,7 +425,7 @@ void main() {
       };
       measure(); update(); paint(current, false);
       ST.create({ start: 0, end: "max", onUpdate: update, onRefresh: () => { measure(); update(); } });
-    } else paint(PAGE === "case" ? "work" : "", false);
+    } else paint("", false);
     addEventListener("resize", () => paint(current, false));
 
     // Mobile menu
@@ -925,7 +925,7 @@ void main() {
         <div class="absolute inset-0 z-10" style="transform-style:preserve-3d">${C.projects.map((p) => `<div data-card class="absolute left-1/2 top-1/2 opacity-0" style="transform-style:preserve-3d;backface-visibility:hidden;transform-origin:50% 50%"><div class="relative size-full overflow-hidden border border-border bg-gradient-to-br shadow-2xl" style="border-radius:16px;backface-visibility:hidden">${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" draggable="false" class="pointer-events-none block size-full select-none object-cover">` : cover(p)}</div></div>`).join("")}</div>
         <div class="pointer-events-none absolute inset-0 z-[200]">${C.projects.map((p) => `<div data-cap class="absolute left-1/2 top-1/2 opacity-0" style="visibility:hidden"><div class="origin-top-left">
           <p class="text-xs uppercase tracking-[0.2em] text-muted">${p.n} · ${p.category}</p>
-          <div class="mt-1 flex items-baseline justify-between gap-3"><h3 class="text-lg font-bold tracking-tight">${p.title}</h3>${p.href ? `<a href="${BASE + p.href}" class="pointer-events-auto inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-accent hover:underline">View ${ico("arrow-right", 14)}<span class="sr-only">${p.title} case study</span></a>` : ""}</div>
+          <div class="mt-1 flex items-baseline justify-between gap-3"><h3 class="text-lg font-bold tracking-tight">${p.title}</h3>${p.href ? `<a href="${p.href}" target="_blank" rel="noreferrer" class="pointer-events-auto inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-accent hover:underline">View ${ico("external-link", 14)}<span class="sr-only">${p.title} (opens in a new tab)</span></a>` : ""}</div>
           <div data-tags class="mt-2 flex w-max items-center gap-1.5">${p.tags.map((t) => `<span class="whitespace-nowrap rounded-full border border-border px-2.5 py-0.5 text-xs text-muted">${t}</span>`).join("")}</div>
         </div></div>`).join("")}</div>
       </div></section>`;
@@ -937,7 +937,7 @@ void main() {
       <p class="mb-6 text-lg font-medium">${p.summary}</p>
       ${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" loading="lazy" class="mt-auto aspect-[2.3/1] w-full rounded-xl border border-white/25 object-cover">` : `<div role="img" aria-label="${esc(p.title)} screenshot placeholder" class="mt-auto overflow-hidden rounded-xl border border-white/25 bg-black/30"><div class="flex gap-1.5 px-3 py-2" aria-hidden="true"><span class="size-2.5 rounded-full bg-white/50"></span><span class="size-2.5 rounded-full bg-white/50"></span><span class="size-2.5 rounded-full bg-white/50"></span></div><div class="grid aspect-[2.3/1] place-items-center text-sm text-white/90">Screenshot coming soon</div></div>`}
     </div>
-    <div class="mt-4 flex flex-wrap items-center gap-2">${p.tags.map((t) => `<span class="rounded-full border border-border px-3 py-1 text-sm text-muted">${t}</span>`).join("")}${p.href ? `<a href="${BASE + p.href}" class="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">View ${ico("arrow-right", 14)}<span class="sr-only">${p.title} case study</span></a>` : ""}</div>`)}</li>`).join("")}</ol>`);
+    <div class="mt-4 flex flex-wrap items-center gap-2">${p.tags.map((t) => `<span class="rounded-full border border-border px-3 py-1 text-sm text-muted">${t}</span>`).join("")}${p.href ? `<a href="${p.href}" target="_blank" rel="noreferrer" class="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">View ${ico("external-link", 14)}<span class="sr-only">${p.title} (opens in a new tab)</span></a>` : ""}</div>`)}</li>`).join("")}</ol>`);
   const GALLERY_MQ = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
 
   function initGallery() {
@@ -1009,7 +1009,7 @@ void main() {
   }
 
   /* =====================================================================
-     Contact page, case study page, footer
+     Contact page, footer
      ===================================================================== */
   const Contact = () => Section("contact", "Contact", "Let's work together", `<div class="text-center">
     <div class="mb-6 flex justify-center">${Face(96)}</div>
@@ -1028,30 +1028,6 @@ void main() {
       setTimeout(() => (b.innerHTML = `${ico("copy", 16)}Copy email`), 2000);
     });
   }
-
-  // Case study: problem, role/timeline/tools, process, results, previous/next.
-  const CaseStudy = () => {
-    const slug = document.body.dataset.case, cs = C.caseStudies[slug];
-    const i = C.projects.findIndex((p) => p.slug === slug), p = C.projects[i], prev = C.projects[i - 1], next = C.projects[i + 1];
-    const block = (n, title, body) => Reveal(cx(CARD, "p-6 md:p-8"), `<p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">${n}</p><h2 class="mt-2 text-2xl font-bold tracking-tight">${title}</h2><div class="mt-3 text-muted">${body}</div>`);
-    const fact = (k, v) => `<div class="rounded-xl border border-border bg-bg/50 px-4 py-3.5"><p class="font-mono text-[10px] uppercase tracking-wider text-muted min-[380px]:text-[11px]">${k}</p><p class="mt-1.5 text-text">${v}</p></div>`;
-    const navCard = (proj, dir) => `<a href="${proj ? BASE + proj.href : BASE + "#work"}" class="block rounded-card border border-border bg-surface/70 p-6 transition-colors duration-200 hover:border-accent2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">${dir === "prev" ? "Previous" : "Next"}</p><p class="mt-1 text-xl font-semibold">${proj ? proj.title : "All work"}</p><p class="mt-6 text-sm font-semibold text-accent">${dir === "prev" ? "← Back" : "Explore →"}</p></a>`;
-    return `<section id="top" class="mx-auto flex max-w-[1040px] flex-col items-center px-5 pb-10 pt-10 text-center md:pt-14">
-        <div class="text-center" data-sec-head>${Label("sec-label", `${p.n} · ${p.category}`)}
-          <h1 class="sec-title mt-2 text-[clamp(32px,6vw,56px)] font-bold leading-[1.1] tracking-tight"><span class="text-gradient">${cs.title}</span></h1>
-          <p class="mt-3 max-w-xl text-lg text-muted">${cs.subtitle}</p>
-          <div class="mt-5 flex items-center justify-center gap-3 text-sm text-muted">${Face(40)}<span>By <span class="font-semibold text-text">${esc(P.name)}</span></span></div>
-          <div aria-hidden="true" class="sec-rule mx-auto mt-4 h-0.5 w-12 origin-center rounded-full bg-gradient-to-r from-accent to-accent2"></div></div>
-        ${Reveal("mt-10 w-full overflow-hidden rounded-[28px] border border-border shadow-2xl", `<div class="aspect-[2.3/1] w-full">${p.image ? `<img src="${BASE + p.image}" alt="${esc(p.imageAlt || p.title)}" class="size-full object-cover">` : cover(p)}</div>`)}
-      </section>
-      <section class="mx-auto flex max-w-[900px] flex-col gap-4 px-5 pb-24">
-        ${block("01", "Problem and overview", `<p>${cs.overview}</p>`)}
-        ${block("02", "Role, timeline and tools", `<div class="grid gap-3 md:grid-cols-3">${fact("Role", cs.role)}${fact("Timeline", cs.timeline)}${fact("Tools", cs.tools.join(", "))}</div>`)}
-        ${block("03", "Process, wireframes, code and visuals", `<p>${cs.process}</p>`)}
-        ${block("04", "Results and deliverables", `<p>${cs.results}</p>`)}
-        <nav aria-label="More case studies" class="grid gap-4 md:grid-cols-2">${navCard(prev, "prev")}${navCard(next, "next")}</nav>
-      </section>`;
-  };
 
   // Footer on every page: navigation, GitHub, email, resume.
   const Footer = () => `<footer class="mx-auto flex max-w-[1760px] flex-col items-center justify-between gap-4 px-5 min-[1280px]:px-[clamp(1.25rem,3vw,3.5rem)] py-8 text-sm text-muted md:flex-row">
@@ -1072,7 +1048,6 @@ void main() {
   const MAIN = {
     home: () => `${Hero()}${About()}${Skills()}${Experience()}${desktopGallery ? ProjectsDesktop() : ProjectsList()}${Multimedia()}${Credentials()}`,
     contact: () => Contact(),
-    case: () => CaseStudy(),
   }[PAGE]();
   root.innerHTML = `
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-contrast">Skip to content</a>
