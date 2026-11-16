@@ -135,10 +135,10 @@ window.CONTENT = {
   multimedia: [
     {
       title: "Sanag",
-      category: "Video",
+      category: "Multimedia",
       year: "2026",
-      summary: "A video filmed on campus at the University of San Agustin.",
-      tags: ["Video"],
+      summary: "Filmed on campus at the University of San Agustin.",
+      tags: [],
       drive: "1YkQ3lCEkzNpkV3_WT5TLaMwtvaAYp48N",
       poster: "assets/media/sanag-poster.jpg",
     },

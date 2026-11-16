@@ -723,7 +723,7 @@ void main() {
      Multimedia: video cards that open a player (Google Drive embed)
      ===================================================================== */
   const driveEmbed = (id) => `https://drive.google.com/file/d/${encodeURIComponent(id)}/preview`;
-  const Multimedia = () => Section("multimedia", "Multimedia", "Video & multimedia", `
+  const Multimedia = () => Section("multimedia", "Multimedia", "Multimedia", `
     <ul class="mx-auto grid max-w-[1280px] gap-6 md:grid-cols-2 xl:grid-cols-3">${C.multimedia.map((m, i) => `<li>${Reveal("h-full", `
       <button type="button" data-media="${i}" class="media-card group block h-full w-full overflow-hidden rounded-card border border-border bg-surface/70 text-left transition-[transform,border-color,box-shadow] duration-500 hover:-translate-y-1 hover:border-accent2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
         <span class="relative block aspect-video overflow-hidden bg-bg">
