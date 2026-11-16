@@ -142,6 +142,25 @@ window.CONTENT = {
       drive: "1YkQ3lCEkzNpkV3_WT5TLaMwtvaAYp48N",
       poster: "assets/media/sanag-poster.jpg",
     },
+    {
+      title: "Mind Bridge Infographic",
+      category: "Multimedia",
+      year: "2026",
+      summary: "One-page overview of the Mind Bridge student mental health monitoring system: problem, solution, methodology and timeline.",
+      tags: [],
+      file: "assets/media/infographics.pdf",
+      poster: "assets/media/infographics-poster.jpg",
+      posterPosition: "top",
+    },
+    {
+      title: "The Farmer's Phone",
+      category: "Multimedia",
+      year: "2026",
+      summary: "A presentation by Jan Louis Simundo, Kervin Sarmiento and Tim Gabriel Nuñal.",
+      tags: [],
+      file: "assets/media/farmers-phone.pdf",
+      poster: "assets/media/farmers-phone-poster.jpg",
+    },
   ],
 
   /* ---------- 05 #credentials ---------- */

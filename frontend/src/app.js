@@ -727,9 +727,9 @@ void main() {
     <ul class="mx-auto grid max-w-[1280px] gap-6 md:grid-cols-2 xl:grid-cols-3">${C.multimedia.map((m, i) => `<li>${Reveal("h-full", `
       <button type="button" data-media="${i}" class="media-card group block h-full w-full overflow-hidden rounded-card border border-border bg-surface/70 text-left transition-[transform,border-color,box-shadow] duration-500 hover:-translate-y-1 hover:border-accent2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
         <span class="relative block aspect-video overflow-hidden bg-bg">
-          ${m.poster ? `<img src="${BASE + m.poster}" alt="" loading="lazy" class="size-full object-cover transition-transform duration-700 group-hover:scale-105">` : `<span class="proj-cover" style="background:linear-gradient(135deg,#0ea5e9,#0c4a6e)"><span><b>${esc(m.title)}</b></span></span>`}
+          ${m.poster ? `<img src="${BASE + m.poster}" alt="" loading="lazy" style="object-position:${m.posterPosition || "center"}" class="size-full object-cover transition-transform duration-700 group-hover:scale-105">` : `<span class="proj-cover" style="background:linear-gradient(135deg,#0ea5e9,#0c4a6e)"><span><b>${esc(m.title)}</b></span></span>`}
           <span aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent"></span>
-          <span aria-hidden="true" class="media-play absolute left-1/2 top-1/2 grid size-16 place-items-center rounded-full bg-surface/90 text-accent shadow-2xl backdrop-blur transition-transform duration-500">${ico("play", 26)}</span>
+          <span aria-hidden="true" class="media-play absolute left-1/2 top-1/2 grid size-16 place-items-center rounded-full bg-surface/90 text-accent shadow-2xl backdrop-blur transition-transform duration-500">${ico(m.file ? "file-text" : "play", 26)}</span>
           ${m.duration ? `<span class="absolute bottom-3 right-3 rounded-md bg-black/60 px-2 py-0.5 font-mono text-xs text-white">${esc(m.duration)}</span>` : ""}
         </span>
         <span class="block p-5">
@@ -742,9 +742,9 @@ void main() {
     <dialog data-player aria-label="Video player" class="media-dialog">
       <div class="relative w-full overflow-hidden rounded-card border border-border bg-surface shadow-2xl">
         <div class="flex items-center justify-between gap-4 px-5 py-3"><p data-player-title class="truncate font-semibold"></p>
-          <a data-player-drive href="#" target="_blank" rel="noreferrer" class="ml-auto shrink-0 text-sm font-semibold text-accent hover:underline">Open in Drive</a>
+          <a data-player-drive href="#" target="_blank" rel="noreferrer" class="ml-auto shrink-0 text-sm font-semibold text-accent hover:underline">Open in new tab</a>
           <button type="button" data-player-close aria-label="Close video" class="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-bg/60 hover:border-accent">${ico("x", 18)}</button></div>
-        <div class="aspect-video w-full bg-black"><iframe data-player-frame title="" allow="autoplay; fullscreen; picture-in-picture" class="size-full border-0"></iframe></div>
+        <div data-player-box class="aspect-video w-full bg-black"><iframe data-player-frame title="" allow="autoplay; fullscreen; picture-in-picture" class="size-full border-0"></iframe></div>
       </div>
     </dialog>`);
   function initMultimedia() {
@@ -758,8 +758,11 @@ void main() {
       opener = b;
       title.textContent = m.title;
       frame.title = m.title;
-      $("[data-player-drive]", dlg).href = m.drive ? `https://drive.google.com/file/d/${encodeURIComponent(m.drive)}/view` : m.embed;
-      frame.src = m.drive ? driveEmbed(m.drive) : m.embed;
+      $("[data-player-drive]", dlg).href = m.drive ? `https://drive.google.com/file/d/${encodeURIComponent(m.drive)}/view` : m.file ? BASE + m.file : m.embed;
+      const isFile = !!m.file;
+      $("[data-player-box]", dlg).classList.toggle("aspect-video", !isFile);
+      $("[data-player-box]", dlg).style.height = isFile ? "min(78vh, 900px)" : "";
+      frame.src = m.drive ? driveEmbed(m.drive) : isFile ? BASE + m.file : m.embed;
       document.documentElement.style.overflow = "hidden";
       dlg.showModal();
       if (prefersMotion()) gsap.fromTo(dlg.firstElementChild, { opacity: 0, y: 24, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: EASE.out });
