@@ -917,11 +917,11 @@ void main() {
   const ProjectsDesktop = () => {
     const big = "font-bold leading-[0.86] tracking-[-0.05em] whitespace-nowrap text-[clamp(56px,8vw,120px)]";
     return `<section id="work" aria-labelledby="work-heading" class="relative w-full" style="height:380vh" data-gallery>
-      <h2 id="work-heading" class="sr-only">Project case studies</h2>
+      <h2 id="work-heading" class="sr-only">Featured projects</h2>
       <div data-stage class="sticky top-0 h-svh min-h-[600px] w-full overflow-hidden" style="perspective:1300px;transform-style:preserve-3d;isolation:isolate">
         <div data-w1 aria-hidden="true" class="pointer-events-none absolute left-1/2 top-[56%] z-0 w-max opacity-0 will-change-transform"><div class="${big} text-text">FEATURED</div></div>
         <div data-w2 aria-hidden="true" class="pointer-events-none absolute left-1/2 top-[39%] z-0 w-max opacity-0 will-change-transform"><div class="${big} text-gradient">PROJECTS</div></div>
-        <p data-blurb aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 p-4 text-center text-xs font-medium leading-tight text-muted opacity-0">Project case studies, with more on the way.</p>
+        <p data-blurb aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 p-4 text-center text-xs font-medium leading-tight text-muted opacity-0">Things I have built, and am still building.</p>
         <div class="absolute inset-0 z-10" style="transform-style:preserve-3d">${C.projects.map((p) => `<div data-card class="absolute left-1/2 top-1/2 opacity-0" style="transform-style:preserve-3d;backface-visibility:hidden;transform-origin:50% 50%"><div class="relative size-full overflow-hidden border border-border bg-gradient-to-br shadow-2xl" style="border-radius:16px;backface-visibility:hidden">${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" draggable="false" class="pointer-events-none block size-full select-none object-cover">` : cover(p)}</div></div>`).join("")}</div>
         <div class="pointer-events-none absolute inset-0 z-[200]">${C.projects.map((p) => `<div data-cap class="absolute left-1/2 top-1/2 opacity-0" style="visibility:hidden"><div class="origin-top-left">
           <p class="text-xs uppercase tracking-[0.2em] text-muted">${p.n} · ${p.category}</p>
@@ -930,12 +930,12 @@ void main() {
         </div></div>`).join("")}</div>
       </div></section>`;
   };
-  const ProjectsList = () => Section("work", "Work", "Project case studies", `<ol class="mx-auto grid max-w-[1280px] gap-8 md:grid-cols-2 xl:grid-cols-3">${C.projects.map((p) => `<li class="flex">${Reveal("flex w-full flex-col", `
+  const ProjectsList = () => Section("work", "Work", "Featured projects", `<ol class="mx-auto grid max-w-[1280px] gap-8 md:grid-cols-2 xl:grid-cols-3">${C.projects.map((p) => `<li class="flex">${Reveal("flex w-full flex-col", `
     <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted"><span>${p.n}</span><span aria-hidden="true" class="h-px w-8 bg-border"></span>${Label("", p.category)}</div>
     <h3 class="mt-2 text-3xl font-bold tracking-tight">${p.title}</h3>
     <div class="mt-4 flex flex-1 flex-col rounded-[28px] border border-border bg-gradient-to-br p-6 text-white" style="background:${p.tone}">
       <p class="mb-6 text-lg font-medium">${p.summary}</p>
-      ${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" loading="lazy" class="mt-auto aspect-[2.3/1] w-full rounded-xl border border-white/25 object-cover">` : `<div role="img" aria-label="${esc(p.title)} screenshot placeholder" class="mt-auto overflow-hidden rounded-xl border border-white/25 bg-black/30"><div class="flex gap-1.5 px-3 py-2" aria-hidden="true"><span class="size-2.5 rounded-full bg-white/50"></span><span class="size-2.5 rounded-full bg-white/50"></span><span class="size-2.5 rounded-full bg-white/50"></span></div><div class="grid aspect-[2.3/1] place-items-center text-sm text-white/90">Screenshot coming soon</div></div>`}
+      ${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" loading="lazy" style="object-position:${p.imagePosition || 'center'}" class="mt-auto aspect-[2.3/1] w-full rounded-xl border border-white/25 object-cover">` : `<div role="img" aria-label="${esc(p.title)} screenshot placeholder" class="mt-auto overflow-hidden rounded-xl border border-white/25 bg-black/30"><div class="flex gap-1.5 px-3 py-2" aria-hidden="true"><span class="size-2.5 rounded-full bg-white/50"></span><span class="size-2.5 rounded-full bg-white/50"></span><span class="size-2.5 rounded-full bg-white/50"></span></div><div class="grid aspect-[2.3/1] place-items-center text-sm text-white/90">Screenshot coming soon</div></div>`}
     </div>
     <div class="mt-4 flex flex-wrap items-center gap-2">${p.tags.map((t) => `<span class="rounded-full border border-border px-3 py-1 text-sm text-muted">${t}</span>`).join("")}${p.href ? `<a href="${p.href}" target="_blank" rel="noreferrer" class="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">View ${ico("external-link", 14)}<span class="sr-only">${p.title} (opens in a new tab)</span></a>` : ""}</div>`)}</li>`).join("")}</ol>`);
   const GALLERY_MQ = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
