@@ -36,8 +36,19 @@ cd frontend && python3 -m http.server 5173
 # open http://localhost:5173
 ```
 
-Pages: `index.html` (Home), `about.html`, `skills.html`, `projects.html`, `contact.html`.
-Shared code: `frontend/styles/main.css`, `frontend/src/main.js` (loader, nav, animations; GSAP via CDN).
+Pages (follow `Simundo-Portfolio-Sitemap.pdf`):
+
+| URL                  | File                                | Contents                                                     |
+| -------------------- | ----------------------------------- | ------------------------------------------------------------ |
+| `/`                  | `index.html`                        | Home: hero, #about, #experience, #work, #credentials        |
+| `/contact/`          | `contact/index.html`                | Email, GitHub, LinkedIn                                      |
+| `/work/mind-bridge/` | `work/mind-bridge/index.html`       | Mind Bridge case study                                       |
+
+- **Edit content:** `frontend/src/content.js` holds every word, link and project. Empty links are hidden.
+- **App:** `frontend/src/app.js` renders the pages and runs every animation (GSAP 3.15 via CDN).
+- **Loader:** `frontend/src/preloader.js` with `preload-init.js`; plays once per browser session.
+- **Styles:** `frontend/styles/tailwind.css` (utilities) and `frontend/styles/theme.css` (white and light-blue colour tokens).
+- **Resume:** put the PDF at `frontend/resume.pdf` (the footer links to it).
 
 ## Rule
 
