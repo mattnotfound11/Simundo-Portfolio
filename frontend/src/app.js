@@ -727,7 +727,7 @@ void main() {
     <ul class="mx-auto grid max-w-[1280px] gap-6 md:grid-cols-2 xl:grid-cols-3">${C.multimedia.map((m, i) => `<li>${Reveal("h-full", `
       <button type="button" data-media="${i}" class="media-card group block h-full w-full overflow-hidden rounded-card border border-border bg-surface/70 text-left transition-[transform,border-color,box-shadow] duration-500 hover:-translate-y-1 hover:border-accent2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
         <span class="relative block aspect-video overflow-hidden bg-bg">
-          ${m.poster ? `<img src="${BASE + m.poster}" alt="" loading="lazy" style="object-position:${m.posterPosition || "center"}" class="size-full object-cover transition-transform duration-700 group-hover:scale-105">` : `<span class="proj-cover" style="background:linear-gradient(135deg,#0ea5e9,#0c4a6e)"><span><b>${esc(m.title)}</b></span></span>`}
+          ${m.poster ? `<img src="${BASE + m.poster}" alt="" width="960" height="540" loading="lazy" decoding="async" style="object-position:${m.posterPosition || "center"}" class="size-full object-cover transition-transform duration-700 group-hover:scale-105">` : `<span class="proj-cover" style="background:linear-gradient(135deg,#0ea5e9,#0c4a6e)"><span><b>${esc(m.title)}</b></span></span>`}
           <span aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent"></span>
           <span aria-hidden="true" class="media-play absolute left-1/2 top-1/2 grid size-16 place-items-center rounded-full bg-surface/90 text-accent shadow-2xl backdrop-blur transition-transform duration-500">${ico(m.file ? "file-text" : "play", 26)}</span>
           ${m.duration ? `<span class="absolute bottom-3 right-3 rounded-md bg-black/60 px-2 py-0.5 font-mono text-xs text-white">${esc(m.duration)}</span>` : ""}
@@ -750,6 +750,9 @@ void main() {
   function initMultimedia() {
     const dlg = $("[data-player]");
     if (!dlg) return;
+    // Warm the cache with the card images once the page is idle, so they are ready before the section scrolls in.
+    const warm = () => C.multimedia.forEach((m) => m.poster && (new Image().src = BASE + m.poster));
+    "requestIdleCallback" in window ? requestIdleCallback(warm, { timeout: 4000 }) : setTimeout(warm, 2500);
     const frame = $("[data-player-frame]", dlg), title = $("[data-player-title]", dlg);
     let opener = null;
     dlg.addEventListener("close", () => { frame.src = "about:blank"; document.documentElement.style.overflow = ""; opener?.focus(); });
