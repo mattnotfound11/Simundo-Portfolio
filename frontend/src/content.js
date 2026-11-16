@@ -9,8 +9,8 @@ window.CONTENT = {
     tagline: "Building things for the web.",
     initials: "JLS",
     // One photo used everywhere (hero avatar, About portrait, page shell).
-    avatar: "assets/images/profile.jpg",
-    portrait: "assets/images/profile.jpg",
+    avatar: "assets/images/profile.jpg?v=2",
+    portrait: "assets/images/profile.jpg?v=2",
   },
 
   // Preloader lines under the big name
