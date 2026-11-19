@@ -20,7 +20,7 @@ window.CONTENT = {
     email: "simundojanlouis@gmail.com",
     github: "", // e.g. "https://github.com/your-username"
     linkedin: "", // e.g. "https://www.linkedin.com/in/your-name"
-    resume: "resume.pdf", // put the file at frontend/resume.pdf
+    resume: "", // e.g. "resume.pdf" (put the file in frontend/ first); empty hides the footer link
   },
 
   /* ---------- 01 #about: bio and tech highlights ---------- */

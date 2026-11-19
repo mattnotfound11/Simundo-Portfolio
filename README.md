@@ -14,7 +14,6 @@ Simundo-Portfolio/
 | `src/`        | Main application code (pages, entry point)      |
 | `components/` | Reusable UI components                          |
 | `styles/`     | CSS / SCSS / theme files                        |
-| `public/`     | Static files served as-is (favicon, index.html) |
 | `assets/`     | `images/`, `fonts/`, `icons/`                   |
 | `skills/`     | Skills / skill files related to the frontend    |
 

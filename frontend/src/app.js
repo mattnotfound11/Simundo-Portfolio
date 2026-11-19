@@ -2,6 +2,13 @@
    Renders the single page from window.CONTENT and wires every animation.
    Needs: gsap, ScrollTrigger, ScrollToPlugin (cdnjs), icons.js, content.js. */
 (() => {
+  // If the animation library (CDN) or the data files failed to load, keep the static page that is already in the HTML.
+  if (!window.gsap || !window.ScrollTrigger || !window.ScrollToPlugin || !window.CONTENT || !window.ICONS) {
+    console.warn("Portfolio scripts did not load; showing the static page.");
+    window.__appReady = true;
+    window.dispatchEvent(new Event("app:ready"));
+    return;
+  }
   const C = window.CONTENT;
   const ICONS = window.ICONS;
   const gsap = window.gsap;
@@ -91,13 +98,13 @@
   const Label = (cls, t) => `<p class="${cx("font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted", cls)}">${t}</p>`;
 
   // Section shell: label, title with gradient last word, rule.
-  function Section(id, label, title, inner, extra = "") {
+  function Section(id, label, title, inner, extra = "", heading = "h2") {
     const words = title.split(" ");
     const last = words.pop();
     return `<section id="${id}" class="mx-auto max-w-[1760px] px-5 min-[1280px]:px-[clamp(1.25rem,3vw,3.5rem)] py-[72px] md:py-24" ${extra}>
       <div class="text-center" data-sec-head>
         ${Label("sec-label", label)}
-        <h2 class="sec-title mt-2 text-[clamp(28px,4vw,48px)] font-bold tracking-tight">${words.join(" ")} <span class="text-gradient">${last}</span></h2>
+        <${heading} class="sec-title mt-2 text-[clamp(28px,4vw,48px)] font-bold tracking-tight">${words.join(" ")} <span class="text-gradient">${last}</span></${heading}>
         <div aria-hidden="true" class="sec-rule mx-auto mt-4 h-0.5 w-12 origin-center rounded-full bg-gradient-to-r from-accent to-accent2"></div>
       </div>
       <div class="mt-12">${inner}</div>
@@ -954,12 +961,17 @@ void main() {
     const render = (p) => {
       const cols = Math.min(3, N), rows = Math.ceil(N / cols);
       const maxW = Math.min(1160, Math.max(W - 96, 200));
-      const rowH = (H * 0.84 - rows * 88 - (rows - 1) * 16) / rows;
+      // Keep the finished grid clear of the sticky nav (top) and the viewport edge (bottom).
+      const TOP = 92, avail = Math.max(H - TOP - 20, 240);
+      const rowH = (avail - rows * 88 - (rows - 1) * 16) / rows;
       const cw = Math.max(90, Math.min((maxW - 16 * (cols - 1)) / cols, rowH * 1.6)), ch = cw / 1.6;
       const tagScale = Math.min(1, cw / (Math.max(0, ...tagW) || cw));
       const gridW = cols * cw + (cols - 1) * 16, gridH = rows * (ch + 88) + (rows - 1) * 16;
       const ow = Math.min(410, W * 0.28), oh = ow / 1.6;
-      const rx = Math.min(570, W * 0.44), ry = Math.min(210, H * 0.3), rz = Math.min(520, W * 0.42);
+      // With only a few projects a wide orbit sends the card off screen and into the background, so the swing is tightened
+      // and the card never fades far.
+      const few = N < 4, tight = few ? 0.42 : 1;
+      const rx = Math.min(570, W * 0.44) * tight, ry = Math.min(210, H * 0.3) * (few ? 0.7 : 1), rz = Math.min(520, W * 0.42) * (few ? 0.6 : 1);
       const inA = smooth(0, 0.2, p), wordsOn = inA * (1 - smooth(0.74, 0.94, p));
       const lift = mix(28, 0, inA), gap = Math.min(220, W * 0.5), spread = mix(W * 0.7, (gap + 32) / 2, inA);
       w1.style.opacity = String(wordsOn); w1.style.transform = `translate3d(calc(-100% - ${spread}px), calc(-50% + ${lift}px), 0)`;
@@ -970,14 +982,15 @@ void main() {
         const el = cards[i], cap = caps[i];
         const rise = smooth(0.025 + i * 0.01, 0.18 + i * 0.012, p);
         const settle = smooth(0.56 + i * 0.009, Math.min(0.91 + i * 0.009, 0.99), p);
-        const ang = (((i / N) * 360 - 125 + orbit * 310) * Math.PI) / 180;
+        const deg = few ? (i / N) * 200 - 70 + orbit * 140 : (i / N) * 360 - 125 + orbit * 310;
+        const ang = (deg * Math.PI) / 180;
         const ox = Math.sin(ang) * rx, oy = Math.cos(ang + 0.65) * ry - H * 0.025 - 40, oz = Math.cos(ang) * rz;
         const front = clamp((oz + rz) / Math.max(rz * 2, 1));
-        const sc = mix(0.82, 1, front), op = mix(0.2, 1, front);
+        const sc = mix(few ? 0.9 : 0.82, 1, front), op = mix(few ? 0.75 : 0.2, 1, front);
         const sx = ox - ow / 2, sy = oy - oh / 2 + (1 - rise) * H * 0.48;
         const col = i % cols, row = Math.floor(i / cols), inRow = Math.min(cols, N - row * cols);
         const gx = -gridW / 2 + col * (cw + 16) + ((cols - inRow) * (cw + 16)) / 2;
-        const gy = H * 0.52 - H / 2 - gridH / 2 + row * (ch + 88 + 16);
+        const gy = TOP - H / 2 + Math.max(0, (avail - gridH) / 2) + row * (ch + 88 + 16);
         const w = mix(ow, cw, settle), h = mix(oh, ch, settle), x = mix(sx, gx, settle), y = mix(sy, gy, settle);
         const z = mix(oz, 0, settle), ryd = mix(-Math.sin(ang) * 62, 0, settle), rzd = mix(-Math.sin(ang) * 8, 0, settle);
         const s = mix(sc, 1, settle), o = clamp(mix(op * rise * enter, 1, settle)), W2 = w * 2, H2 = h * 2;
@@ -1021,7 +1034,7 @@ void main() {
       <button type="button" data-copy aria-live="polite" class="${BTN_OUTLINE}">${ico("copy", 16)}Copy email</button>
       ${L.github ? `<a href="${L.github}" target="_blank" rel="noreferrer" class="${BTN_OUTLINE}">${ghIcon(16)}GitHub profile</a>` : ""}
       ${L.linkedin ? `<a href="${L.linkedin}" target="_blank" rel="noreferrer" class="${BTN_OUTLINE}">LinkedIn profile</a>` : ""}
-    </div></div>`, 'style="min-height:calc(100svh - 12rem)"');
+    </div></div>`, 'style="min-height:calc(100svh - 12rem)"', "h1");
   function initCopy() {
     const b = $("[data-copy]");
     b.addEventListener("click", async () => {
