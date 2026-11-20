@@ -925,13 +925,13 @@ void main() {
   const cover = (p) => `<div class="proj-cover" style="background:${p.tone}"><div><b>${p.title}</b><span>${p.category}</span></div></div>`;
   const ProjectsDesktop = () => {
     const big = "font-bold leading-[0.86] tracking-[-0.05em] whitespace-nowrap text-[clamp(56px,8vw,120px)]";
-    return `<section id="work" aria-labelledby="work-heading" class="relative w-full" style="height:380vh" data-gallery>
+    return `<section id="work" aria-labelledby="work-heading" class="relative w-full" style="height:${C.projects.length < 4 ? 260 : 380}vh" data-gallery>
       <h2 id="work-heading" class="sr-only">Featured projects</h2>
-      <div data-stage class="sticky top-0 h-svh min-h-[600px] w-full overflow-hidden" style="perspective:1300px;transform-style:preserve-3d;isolation:isolate">
+      <div data-stage class="sticky top-0 h-svh min-h-[600px] w-full overflow-hidden" style="isolation:isolate">
         <div data-w1 aria-hidden="true" class="pointer-events-none absolute left-1/2 top-[56%] z-0 w-max opacity-0 will-change-transform"><div class="${big} text-text">FEATURED</div></div>
         <div data-w2 aria-hidden="true" class="pointer-events-none absolute left-1/2 top-[39%] z-0 w-max opacity-0 will-change-transform"><div class="${big} text-gradient">PROJECTS</div></div>
         <p data-blurb aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 p-4 text-center text-xs font-medium leading-tight text-muted opacity-0">Things I have built, and am still building.</p>
-        <div class="absolute inset-0 z-10" style="transform-style:preserve-3d">${C.projects.map((p) => `<div data-card class="absolute left-1/2 top-1/2 opacity-0" style="transform-style:preserve-3d;backface-visibility:hidden;transform-origin:50% 50%"><div class="relative size-full overflow-hidden border border-border bg-gradient-to-br shadow-2xl" style="border-radius:16px;backface-visibility:hidden">${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" draggable="false" class="pointer-events-none block size-full select-none object-cover">` : cover(p)}</div></div>`).join("")}</div>
+        <div class="absolute inset-0 z-10" style="perspective:1300px;perspective-origin:50% 50%">${C.projects.map((p) => `<div data-card class="absolute left-1/2 top-1/2 opacity-0" style="backface-visibility:hidden;transform-origin:50% 50%;will-change:transform,opacity"><div class="relative size-full overflow-hidden border border-border bg-gradient-to-br shadow-2xl" style="border-radius:16px;backface-visibility:hidden">${p.image ? `<img src="${p.image}" alt="${esc(p.imageAlt || p.title)}" draggable="false" class="pointer-events-none block size-full select-none object-cover">` : cover(p)}</div></div>`).join("")}</div>
         <div class="pointer-events-none absolute inset-0 z-[200]">${C.projects.map((p) => `<div data-cap class="absolute left-1/2 top-1/2 opacity-0" style="visibility:hidden"><div class="origin-top-left">
           <p class="text-xs uppercase tracking-[0.2em] text-muted">${p.n} · ${p.category}</p>
           <div class="mt-1 flex items-baseline justify-between gap-3"><h3 class="text-lg font-bold tracking-tight">${p.title}</h3>${p.href ? `<a href="${p.href}" target="_blank" rel="noreferrer" class="pointer-events-auto inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-accent hover:underline">View ${ico("external-link", 14)}<span class="sr-only">${p.title} (opens in a new tab)</span></a>` : ""}</div>
@@ -960,7 +960,7 @@ void main() {
     const measure = () => { const r = stage.getBoundingClientRect(); W = Math.max(Math.round(r.width), 1); H = Math.max(Math.round(r.height), 1); caps.forEach((c, i) => { const t = $("[data-tags]", c); if (t) tagW[i] = t.offsetWidth; }); };
     const render = (p) => {
       const cols = Math.min(3, N), rows = Math.ceil(N / cols);
-      const maxW = Math.min(1160, Math.max(W - 96, 200));
+      const maxW = Math.min(N < 3 ? 900 : 1160, Math.max(W - 96, 200));
       // Keep the finished grid clear of the sticky nav (top) and the viewport edge (bottom).
       const TOP = 92, avail = Math.max(H - TOP - 20, 240);
       const rowH = (avail - rows * 88 - (rows - 1) * 16) / rows;
@@ -993,10 +993,12 @@ void main() {
         const gy = TOP - H / 2 + Math.max(0, (avail - gridH) / 2) + row * (ch + 88 + 16);
         const w = mix(ow, cw, settle), h = mix(oh, ch, settle), x = mix(sx, gx, settle), y = mix(sy, gy, settle);
         const z = mix(oz, 0, settle), ryd = mix(-Math.sin(ang) * 62, 0, settle), rzd = mix(-Math.sin(ang) * 8, 0, settle);
-        const s = mix(sc, 1, settle), o = clamp(mix(op * rise * enter, 1, settle)), W2 = w * 2, H2 = h * 2;
+        // Cards are laid out larger and scaled down so text stays sharp; the oversize is capped so a big card never becomes a huge GPU layer.
+        const over = Math.max(1, Math.min(2, 1600 / Math.max(w, 1)));
+        const s = mix(sc, 1, settle), o = clamp(mix(op * rise * enter, 1, settle)), W2 = w * over, H2 = h * over;
         el.style.width = `${W2}px`; el.style.height = `${H2}px`; el.style.opacity = String(o);
         el.style.zIndex = String(settle > 0.86 ? 100 + i : Math.round(100 + front * 800));
-        el.style.transform = `translate3d(${x - (W2 - w) / 2}px, ${y - (H2 - h) / 2}px, ${z}px) rotateY(${ryd}deg) rotateZ(${rzd}deg) scale(${s / 2})`;
+        el.style.transform = `translate3d(${x - (W2 - w) / 2}px, ${y - (H2 - h) / 2}px, ${z}px) rotateY(${ryd}deg) rotateZ(${rzd}deg) scale(${s / over})`;
         if (cap) {
           const show = smooth(0.93, 1, p), inner = cap.firstElementChild;
           inner.style.width = `${cw / tagScale}px`; inner.style.transform = tagScale < 1 ? `scale(${tagScale})` : "";
